@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>简单聊天机器人</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6fb; }
+    #chatbox { width: 350px; margin: 60px auto; background: #fff; border-radius: 10px; box-shadow: 0 3px 16px #dbe3ec; padding: 20px; }
+    #messages { height: 320px; overflow-y: auto; border: 1px solid #e1e4ea; border-radius: 6px; margin-bottom: 14px; padding: 10px; background: #f9fafe; }
+    .msg { margin: 10px 0; }
+    .user { color: #1763f7; text-align: right; }
+    .bot { color: #333; text-align: left; }
+    #input-area { display: flex; }
+    #user-input { flex: 1; padding: 8px; border: 1px solid #d1d8e6; border-radius: 4px; }
+    #send-btn { padding: 8px 16px; margin-left: 10px; border: none; background: #1763f7; color: #fff; border-radius: 4px; cursor: pointer; }
+    #send-btn:hover { background: #0f49b7; }
+  </style>
+</head>
+<body>
+  <div id="chatbox">
+    <div id="messages"></div>
+    <div id="input-area">
+      <input type="text" id="user-input" placeholder="请输入你的问题..." autocomplete="off" />
+      <button id="send-btn">发送</button>
+    </div>
+  </div>
+  <script>
+    const messages = document.getElementById('messages');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    function appendMessage(text, sender) {
+      const msg = document.createElement('div');
+      msg.className = 'msg ' + sender;
+      msg.textContent = text;
+      messages.appendChild(msg);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function botReply(input) {
+      // 简单的对话逻辑，可以自定义丰富
+      input = input.trim();
+      if (!input) return "你好，请输入你的问题。";
+      if (input.includes("你好") || input.includes("hi")) return "你好呀！有什么可以帮你？";
+      if (input.includes("你是谁")) return "我是你的聊天机器人，可以陪你聊天哦~";
+      if (input.includes("天气")) return "我现在还不会查天气呢，下次我学会了告诉你！";
+      if (input.includes("再见")) return "再见！期待下次和你聊天。";
+      return "很抱歉，我还听不懂你的意思。可以换个说法吗？";
+    }
+
+    sendBtn.onclick = function() {
+      const text = userInput.value;
+      if (!text.trim()) return;
+      appendMessage(text, 'user');
+      setTimeout(() => {
+        appendMessage(botReply(text), 'bot');
+      }, 600);
+      userInput.value = '';
+      userInput.focus();
+    };
+
+    userInput.addEventListener('keyup', function(e) {
+      if (e.key === 'Enter') sendBtn.click();
+    });
+
+    // 初始欢迎语
+    appendMessage('你好！我是聊天机器人，有什么可以帮你的吗？', 'bot');
+  </script>
+</body>
+</html>
